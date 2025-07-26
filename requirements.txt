@@ -1,0 +1,15 @@
+streamlit
+langchain
+langchain-community
+langchain-chroma
+langchain-huggingface
+langchain-groq
+huggingface-hub
+chromadb
+openpyxl
+pandas
+python-dotenv
+PyPDF2
+nest_asyncio
+pypdf
+sentence-transformers
