@@ -5,13 +5,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Đường dẫn thư mục chứa PDF gốc
-PDF_RAW_DIR = r"E:\WORK\project_test\rag_chatbot_project\data\raw_pdfs"
+PDF_RAW_DIR = r"D:\work\rag_chatbot_project\data\raw_pdfs"
 
 # Đường dẫn thư mục lưu trữ vector database
-VECTOR_DB_DIR = r"E:\WORK\project_test\rag_chatbot_project\data\processed_data\chroma_db"
+VECTOR_DB_DIR = r"E:\work\rag_chatbot_project\data\processed_data\chroma_db"
 
 # Đường dẫn tệp ghi log
-LOG_FILE_PATH = r"E:\WORK\project_test\rag_chatbot_project\logs\logschat_logs.xlsx"
+LOG_FILE_PATH = r"E:\work\rag_chatbot_project\logs\logschat_logs.xlsx"
 
 # HuggingFace Embedding Model
 EMBEDDING_MODEL_NAME = "dangvantuan/vietnamese-document-embedding"
