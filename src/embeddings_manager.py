@@ -1,11 +1,10 @@
 import os
-import shutil
 from typing import List
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-
+from src.chroma_utils import get_client
 from src.config import PDF_RAW_DIR, VECTOR_DB_DIR, EMBEDDING_MODEL_NAME, EMBEDDING_MODEL_KWARGS
 
 # 1. Tải tất cả tài liệu PDF
@@ -29,19 +28,19 @@ def split_documents(documents: List) -> List:
 
 # 3. Tạo và lưu Vector Database
 def create_vector_database(chunks: List) -> Chroma:
-    # Xoá database cũ nếu có
-    if os.path.exists(VECTOR_DB_DIR):
-        shutil.rmtree(VECTOR_DB_DIR)
-    os.makedirs(VECTOR_DB_DIR, exist_ok=True)
+    client = get_client()
+    client.reset()
 
     embeddings = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
         model_kwargs=EMBEDDING_MODEL_KWARGS
     )
 
+    client = get_client()
     vectordb = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
+        client=client,
         persist_directory=VECTOR_DB_DIR
     )
     vectordb.persist()
@@ -58,7 +57,9 @@ def load_vector_database() -> Chroma:
         model_kwargs=EMBEDDING_MODEL_KWARGS
     )
 
+    client = get_client()
     return Chroma(
+        client=client,
         persist_directory=VECTOR_DB_DIR,
         embedding_function=embeddings
     )
