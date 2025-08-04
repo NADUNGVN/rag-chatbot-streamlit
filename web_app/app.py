@@ -61,12 +61,28 @@ with st.sidebar:
     else:
         st.info("Không có tài liệu nào.")
 
-    # Xây dựng lại vector DB
+        # Xây dựng lại vector DB
     if st.button("🔄 Tạo lại Vector DB"):
-        with st.spinner("Đang xử lý..."):
-            rebuild_vector_db()
-            st.success("✅ Đã tạo lại Vector DB. Vui lòng tải lại trang.")
-            st.stop()
+        from src.chroma_utils import dispose            
+
+        with st.spinner("Đang tái tạo..."):
+            # 1. Giải phóng DB cũ (nếu đang mở)
+            if "vectordb" in st.session_state:
+                dispose(st.session_state.vectordb)
+                st.session_state.pop("vectordb", None)
+                st.session_state.pop("retriever", None)
+                st.session_state.pop("chatbot", None)
+
+            # 2. Xoá thư mục & tạo DB mới
+            vectordb = rebuild_vector_db()
+
+            # 3. Nạp retriever + chatbot mới
+            st.session_state.vectordb  = vectordb
+            st.session_state.retriever = create_retriever(vectordb)
+            st.session_state.chatbot   = build_chatbot(vectordb)
+
+        st.toast("✅ Vector DB đã được tái tạo!", icon="🎉")
+        st.rerun() 
 
 # Header
 st.title("💬 RAG Chatbot Hành Chính Công")
